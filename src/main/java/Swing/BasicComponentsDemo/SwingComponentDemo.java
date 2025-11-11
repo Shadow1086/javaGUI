@@ -1,4 +1,4 @@
-package Swing.Swing01;
+package Swing.BasicComponentsDemo;
 
 import java.awt.BorderLayout;
 import java.awt.Image;
@@ -24,6 +24,7 @@ public class SwingComponentDemo {
     JMenu editMenue = new JMenu("编辑");
 
     JMenuItem auto = new JMenuItem("自动换行");
+    //调整图标的大小
     int hight = 15 ; int width = 15;
     ImageIcon copyIcon = new ImageIcon("/Volumes/study/02-java/javaGUI/src/main/resources/fuzhi-L.png");
     ImageIcon pasteIcon = new ImageIcon("/Volumes/study/02-java/javaGUI/src/main/resources/niantie.png");
@@ -200,3 +201,5 @@ public class SwingComponentDemo {
         SwingUtilities.updateComponentTreeUI(jPopupMenu);
     }
 }
+
+

@@ -1,4 +1,4 @@
-package Swing.Swing01;
+package Swing.BasicComponentsDemo;
 
 import javax.swing.SwingUtilities;
 
@@ -9,3 +9,5 @@ public class MainApp {
         });
     }
 }
+
+
