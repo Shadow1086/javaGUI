@@ -1,4 +1,4 @@
-package Swing.BasicComponentsDemo;
+package Swing.a_BasicComponentsDemo;
 
 import javax.swing.SwingUtilities;
 
