@@ -209,14 +209,149 @@ public class SwingComponentDemo {
 	- 使用BorderFactory或者xxxBorder创建Border的实例对象
 	- 调用swing组件中的setBorder(Border b) 方法为组件设置边框
 
+## 文件：JFileChoose
+### 1.使用步骤
+1. 创建JFileChooser对象：
+```java
+//指定默认打开的本地磁盘路径
+JFileChooser chooser = new JFileChooser();	
+```
+2. 调用方法进行初始化
+```java
+//设定默认选中的文件
+setSelectedFile(File file)/setSelectedFiles(File[] files);
+//设置是否可以多选，默认为单选
+setMultiSelectionEnabled(boolean b);
+//设置可以选择内容，例如文件，文件夹等，默认只能选择文件
+setFileSelectionMode(int mode);
+```
+3. 打开文件对话框
+```
+//打开文件加载对话框，并指定父组件
+showOpenDialog(Component parent);
+//打开文件保存对话框，并指定父组件
+showSaveDialog(Component parent);
+```
+4. 获取用户选择的结果
+```
+//获取用户选择的一个文件
+File getSelectedFile();
+//获取用户选择的多个文件
+File[] getSelectFiles();
+```
+### 实例：
+```
+public class FileTest {
+    JFrame frame = new JFrame("JFileSelect测试");
 
+    JMenuBar jmb = new JMenuBar();
+    // 创建菜单
+    JMenu menu = new JMenu("文件");
+    JMenuItem open = new JMenuItem(new AbstractAction("打开") {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // 显示一个文件选择器
+            JFileChooser fileChooser = new JFileChooser(".");
+            fileChooser.showOpenDialog(frame);
+            // 获取用户选择的文件
+            File file = fileChooser.getSelectedFile();
+            // 进行显示
+            try {
+                image = ImageIO.read(file);
+                drawArea.repaint();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
 
+        }
+    });
 
+    JMenuItem save = new JMenuItem(new AbstractAction("另存为") {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // 显示一个文件选择器
+            JFileChooser fileChooser = new JFileChooser(".");
+            //让用户选择保存的文件名
+            fileChooser.showSaveDialog(frame);
 
+            //获取用户选择的保存文件路径
+            File file = fileChooser.getSelectedFile();
 
+            try {
+                ImageIO.write(image,"png",file);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            
+        }
+    });
+    BufferedImage image;
 
+    // 好处：Swing提供的组件都使用了图像缓冲区技术
+    private class MyCanvas extends JPanel {
+        @Override
+        public void paint(Graphics g) {
+            g.drawImage(image, 0, 0, null);
+        }
+    }
+	//画板
+    MyCanvas drawArea = new MyCanvas();
 
+    public void init() {
+        menu.add(open);
+        menu.add(save);
 
+        jmb.add(menu);
+        frame.setJMenuBar(jmb);
+
+        drawArea.setPreferredSize(new Dimension(740,500));
+
+        frame.add(drawArea);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new FileTest().init();
+    }
+}
+```
+## JOptionPane：对话框
+### 基本概述
+创建对话框
+- 方法：
+```
+//消息对话框，告知用户某事已经发生，用户只能当季确定按钮
+showMessageDialog/showInternalMessageDialog
+//确认对话框，用户可以选择yes/no
+showConfirmDialog/showInternalConfirmDialog
+//输入对话框，提示输入某些信息，该方法返回用户输入的字符串
+showInputDialog/showInternalInputDialog
+//自定义选项对话框，允许自定义选项，
+showOptionDialog/showInternalOptionDialog
+```
+- 重载：
+```
+showXxxDialog(Component parentComponent,	//当前对话框的父组件
+	Object message,			//对话框上显示的信息，可以是字符串组件图片
+	String title,			//当前对话框的标题
+	int optionType,			
+	int messageType,	
+	Icon icon,			//当前对话框左上角的图标
+	Object[] options,	//自定义下拉列表的选项
+	Object initialValue	//自定义选项中的默认选中项
+)
+/*
+- optionType:当前对画卷上显示的按钮类型：DEFAULT_OPTION，YES_ON_OPTION，YES_NO_CANCEL_OPTION
+- messageType:当前对话框的类型,ERROR_MESSAGE,INFOMATION_MESSAGE,WARNING_MESSAGE,QUEStiON_MESSAGE,PLAIN_MESSAGE
+```
+
+- YES_OPTION= 0_
+- NO_OPTION = 1_
+- CANCEL_OPTION= 2_
+- OK_OPTION = 0
 
 
 
