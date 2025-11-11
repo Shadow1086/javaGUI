@@ -75,3 +75,7 @@ hs_err_pid*
 # Misc
 logs/
 replay_pid*
+
+# Ulysses editor artifacts
+**/.Ulysses-Group.plist
+**/.Ulysses-Settings.plist
