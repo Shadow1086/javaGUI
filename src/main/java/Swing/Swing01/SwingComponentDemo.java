@@ -1,6 +1,7 @@
 package Swing.Swing01;
 
 import java.awt.BorderLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -23,8 +24,11 @@ public class SwingComponentDemo {
     JMenu editMenue = new JMenu("编辑");
 
     JMenuItem auto = new JMenuItem("自动换行");
-    JMenuItem copy = new JMenuItem("复制");
-    JMenuItem paste = new JMenuItem("粘贴");
+    int hight = 15 ; int width = 15;
+    ImageIcon copyIcon = new ImageIcon("/Volumes/study/02-java/javaGUI/src/main/resources/fuzhi-L.png");
+    ImageIcon pasteIcon = new ImageIcon("/Volumes/study/02-java/javaGUI/src/main/resources/niantie.png");
+    JMenuItem copy = new JMenuItem("复制",new ImageIcon(copyIcon.getImage().getScaledInstance(width, hight, Image.SCALE_SMOOTH)));
+    JMenuItem paste = new JMenuItem("粘贴",new ImageIcon(pasteIcon.getImage().getScaledInstance(width, hight, Image.SCALE_SMOOTH)));
 
     JMenu formatMenu = new JMenu("格式");
     JMenuItem comment = new JMenuItem("注释");
@@ -53,7 +57,8 @@ public class SwingComponentDemo {
 
     // 声明底部
     JTextField tf = new JTextField(40);
-    JButton ok = new JButton("确定");
+    ImageIcon okOIcon = new ImageIcon("/Volumes/study/02-java/javaGUI/src/main/resources/确定.png");
+    JButton ok = new JButton("确定",new ImageIcon(okOIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
 
     // 声明右键菜单
     JPopupMenu jPopupMenu = new JPopupMenu();
@@ -137,8 +142,8 @@ public class SwingComponentDemo {
                 String actionCommand = e.getActionCommand();
                 try {
                     changeFlavor(actionCommand);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             }
         };
