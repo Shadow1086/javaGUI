@@ -52,6 +52,7 @@ public class StudentManagerFrame {
     });
 
     // 声明右键
+    JPopupMenu popupMenu = new JPopupMenu();
     ButtonGroup popupButtonGroup = new ButtonGroup();
     JRadioButtonMenuItem delete = new JRadioButtonMenuItem("删除所选行");
     JRadioButtonMenuItem change = new JRadioButtonMenuItem("修改数据");
@@ -93,6 +94,8 @@ public class StudentManagerFrame {
 
     // 组装组件
     public void init() {
+        //添加数据
+        addStudent(tableValue);
         // 组装表格面板
         tableBoxPanel.add(table.getTableHeader(), BorderLayout.NORTH);
         tableBoxPanel.add(scorllPane, BorderLayout.CENTER);
@@ -105,8 +108,10 @@ public class StudentManagerFrame {
 
         frame.setJMenuBar(menuBar);
         // 组装右键
-        popupButtonGroup.add(change);
         popupButtonGroup.add(delete);
+        popupButtonGroup.add(change);
+        popupMenu.add(change);
+        popupMenu.add(delete);
 
 
         frame.add(tableBoxPanel);
