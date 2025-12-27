@@ -1,9 +1,10 @@
 package homework.studentManager.studentUtil;
 
-import homework.studentManager.view.Student;
 import java.util.regex.Pattern;
 
 import com.mysql.cj.xdevapi.Schema.Validation;
+
+import homework.studentManager.model.Student;
 
 /**
  * ClassName: ValidationUtil
