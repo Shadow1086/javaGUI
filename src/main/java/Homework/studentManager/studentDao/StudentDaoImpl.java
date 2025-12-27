@@ -1,15 +1,17 @@
 package homework.studentManager.studentDao;
 
-import homework.studentManager.view.Student;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+// import Timestamp
 import org.slf4j.Logger;
 
 import org.slf4j.LoggerFactory;
 
+import homework.studentManager.model.Student;
 import homework.studentManager.studentUtil.DBUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,48 +31,85 @@ public class StudentDaoImpl implements StudentDao {
                 INSERT INTO student (stu_id,stu_name,stu_sex,stu_age)
                 VALUES(?,?,?,?);
                 """;
+        String sqlGetCreateTime = """
+                SELECT create_time FROM student
+                WHERE id = ?;
+                """;
         try (Connection conn = DBUtil.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
-            ResultSet rs = ps.getGeneratedKeys()) {
+                PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
             ps.setString(1, stu.getStuId());
             ps.setString(2, stu.getName());
             ps.setString(3, stu.getSex());
             ps.setInt(4, stu.getAge());
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                stu.setId(id);
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                while (rs.next()) {
+                    int id = rs.getInt(1);
+                    stu.setId(id);
+                }
             }
-            return ps.execute();
+            try (PreparedStatement psTime = conn.prepareStatement(sqlGetCreateTime)) {
+                psTime.setInt(1, stu.getId());
+                try (ResultSet rsQuery = psTime.executeQuery()) {
+                    while (rsQuery.next()) {
+                        Timestamp ts = rsQuery.getTimestamp("create_time");
+                        if (ts != null) {
+                            stu.setCreateTime(
+                                    ts.toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                        }
+                    }
+                }
+            }
+            return true;
         } catch (SQLException e) {
             logger.error("添加学号为{}的学生失败：" + e, stu.getStuId());
         }
-        return true;
+        return false;
     }
+
     /**
      * 更新学生信息
+     * 
      * @param Student : 更新之后的学生信息
      */
     @Override
-    public boolean updateStuInfo(Student stu){
+    public boolean updateStuInfo(Student stu) {
         String sql = """
-                UPDATE student 
+                UPDATE student
                 SET stu_id = ?,stu_name = ?,stu_sex = ?,stu_age = ?
                 WHERE id = ?;
                 """;
-        try(Connection conn = DBUtil.getConnection();
-        PreparedStatement ps = conn.prepareStatement(sql)){
+        String sqlQuery = """
+                SELECT update_time FROM student
+                WHERE id = ?;
+                """;
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);) {
             ps.setString(1, stu.getStuId());
-            ps.setString(2,stu.getName());
+            ps.setString(2, stu.getName());
             ps.setString(3, stu.getSex());
             ps.setInt(4, stu.getAge());
             ps.setInt(5, stu.getId());
-            ps.execute();
-        }catch(SQLException e){
-            logger.error("更新学号为{}学生信息错误："+e,stu.getId());
-        }
-        return true;
-    }
+            ps.executeUpdate();
 
+            try (PreparedStatement psQuery = conn.prepareStatement(sqlQuery)) {
+                psQuery.setInt(1, stu.getId());
+                try (ResultSet rsQuery = psQuery.executeQuery()) {
+                    while (rsQuery.next()) {
+                        Timestamp tsQuery = rsQuery.getTimestamp("update_time");
+                        if (tsQuery != null) {
+                            stu.setUpdateTime(tsQuery.toLocalDateTime()
+                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                        }
+                    }
+                }
+            }
+            return true;
+        } catch (SQLException e) {
+            logger.error("更新学号为{}学生信息错误：" + e, stu.getId());
+        }
+        return false;
+    }
 
     /**
      * 删除学生
@@ -81,15 +120,15 @@ public class StudentDaoImpl implements StudentDao {
     public boolean deleteStudent(Student stu) {
         String sql = """
                 DELETE FROM student
-                WHEre stu_id = ? OR stu_name = ?;
+                WHERE id = ?;
                 """;
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, stu.getStuId());
-            ps.setString(2, stu.getName());
-            ps.execute();
+            ps.setInt(1, stu.getId());
+            ps.executeUpdate();
         } catch (SQLException e) {
             logger.error("删除学号为{}的学生失败：" + e, stu.getStuId());
+            return false;
         }
         return true;
     }
@@ -116,6 +155,7 @@ public class StudentDaoImpl implements StudentDao {
 
     /**
      * 查找特定学号的学生
+     * 
      * @param id 要搜索的学生学号
      */
     public List<Student> findById(String id) {
@@ -125,21 +165,25 @@ public class StudentDaoImpl implements StudentDao {
                 """;
         List<Student> list = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = conn.prepareStatement(sql);) {
             ps.setString(1, id);
-            while (rs.next()) {
-                Student stu = translateStudentFromDatabase(rs);
-                list.add(stu);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Student stu = translateStudentFromDatabase(rs);
+                    list.add(stu);
+                }
+                return list;
             }
-            return list;
+
         } catch (SQLException e) {
             logger.error("查找学号为{}的学生失败：" + e, id);
         }
         return list;
     }
+
     /**
      * 查找特定学号的学生
+     * 
      * @param name 要搜索的学生姓名
      */
     public List<Student> findByName(String name) {
@@ -149,27 +193,39 @@ public class StudentDaoImpl implements StudentDao {
                 """;
         List<Student> list = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = conn.prepareStatement(sql);) {
             ps.setString(1, name);
-            while (rs.next()) {
-                Student stu = translateStudentFromDatabase(rs);
-                list.add(stu);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Student stu = translateStudentFromDatabase(rs);
+                    list.add(stu);
+                }
+                return list;
             }
-            return list;
+
         } catch (SQLException e) {
             logger.error("查找姓名为{}的学生失败：" + e, name);
         }
         return list;
     }
 
-
-
     /**
      * ORM映射，将数据库中一行数据变成一个对象
      */
     private Student translateStudentFromDatabase(ResultSet rs) throws SQLException {
-        return new Student(rs.getString("stu_id"),
+        Student stu = new Student(rs.getString("stu_id"),
                 rs.getString("stu_name"), rs.getString("stu_sex"), rs.getInt("stu_age"));
+        stu.setId(rs.getInt("id"));
+        Timestamp createTimestamp = rs.getTimestamp("create_time");
+        if (createTimestamp != null) {
+            stu.setCreateTime(createTimestamp.toLocalDateTime()
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        }
+        Timestamp updateTimestamp = rs.getTimestamp("update_time");
+        if (updateTimestamp != null) {
+            stu.setUpdateTime(updateTimestamp.toLocalDateTime()
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        }
+        return stu;
     }
 }

@@ -1,6 +1,7 @@
 package homework.studentManager.studentDao;
-import homework.studentManager.view.Student;
 import java.util.List;
+
+import homework.studentManager.model.Student;
 public interface StudentDao {
     // 添加学生信息
     boolean addStudent(Student stu);
@@ -17,5 +18,5 @@ public interface StudentDao {
     List<Student> findByName(String name);
 
     //文件的导入导出
-    
+
 }
