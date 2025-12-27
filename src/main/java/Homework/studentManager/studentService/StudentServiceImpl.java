@@ -11,9 +11,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import homework.studentManager.view.Student;
 import homework.studentManager.studentUtil.ValidationUtil;
 import homework.studentManager.studentUtil.ValidationUtil.ValidationResult;
+import homework.studentManager.model.Student;
 import homework.studentManager.studentDao.StudentDao;
 
 public class StudentServiceImpl implements StudentService {

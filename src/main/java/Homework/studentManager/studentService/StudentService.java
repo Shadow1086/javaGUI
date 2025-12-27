@@ -1,9 +1,9 @@
 package homework.studentManager.studentService;
 
-import homework.studentManager.view.Student;
-
 import java.io.File;
 import java.util.List;
+
+import homework.studentManager.model.Student;
 
 public interface StudentService {
     // 添加学生信息
