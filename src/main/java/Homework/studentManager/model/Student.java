@@ -1,4 +1,4 @@
-package homework.studentManager.view;
+package homework.studentManager.model;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
