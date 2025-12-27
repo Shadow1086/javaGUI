@@ -9,6 +9,9 @@ target/
 # Compiled class files
 *.class
 
+# 数据库的配置信息
+.env
+
 # Packages
 *.jar
 *.war
