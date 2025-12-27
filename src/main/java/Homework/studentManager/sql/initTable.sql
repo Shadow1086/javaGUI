@@ -1,0 +1,11 @@
+USE student_manager;
+DROP TABLE IF EXISTS student;
+CREATE TABLE IF NOT EXISTS student(
+    id INT PRIMARY KEY AUTO_INCREMENT COMMENT '学生ID，唯一标识',
+    `stu_id` VARCHAR(30) COMMENT '学生学号',
+    stu_name VARCHAR(20) NOT NULL COMMENT '学生姓名',
+    stu_sex CHAR(1) NOT NULL COMMENT '学生性别',
+    stu_age INT NOT NULL COMMENT '学生年龄',
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON update CURRENT_TIMESTAMP
+)charset = utf8mb4;
