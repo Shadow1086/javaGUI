@@ -7,12 +7,13 @@
     </appender>
     <!-- 文件输出 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>src/main/java/homework/studentManager/logs/app.log</file>
+        <file>logs/app.log</file>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>src/main/java/homework/studentManager/logs/app-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <encoder>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
-            </encoder>
+            <fileNamePattern>logs/app-%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>
     </appender>
     <root level="debug">
