@@ -1,4 +1,4 @@
-package Homework.StudentManage.UI;
+package homework.studentManager.view;
 import javax.swing.*;
 /**
  * ClassName: StudentManagerApp
