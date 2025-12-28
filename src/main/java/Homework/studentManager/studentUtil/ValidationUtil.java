@@ -2,8 +2,6 @@ package homework.studentManager.studentUtil;
 
 import java.util.regex.Pattern;
 
-import com.mysql.cj.xdevapi.Schema.Validation;
-
 import homework.studentManager.model.Student;
 
 /**
@@ -17,7 +15,7 @@ import homework.studentManager.model.Student;
  */
 public class ValidationUtil {
     private static final Pattern ID_PATTERN = Pattern.compile("\\d{5,}");
-    private static final Pattern NAME_PATTERN = Pattern.compile("^[\\u4e00-\\u9fa5a-zA-z\\s]{2,50}$");
+    private static final Pattern NAME_PATTERN = Pattern.compile("^[\\u4e00-\\u9fa5a-zA-Z\\s]{2,50}$");
 
     /**
      * 学生学号
