@@ -62,7 +62,7 @@ public class StudentDaoImpl implements StudentDao {
             }
             return true;
         } catch (SQLException e) {
-            logger.error("添加学号为{}的学生失败：" + e, stu.getStuId());
+            logger.error("添加学号为{}的学生失败：{}", stu.getStuId(), e);
         }
         return false;
     }
@@ -106,7 +106,7 @@ public class StudentDaoImpl implements StudentDao {
             }
             return true;
         } catch (SQLException e) {
-            logger.error("更新学号为{}学生信息错误：" + e, stu.getId());
+            logger.error("更新学号为{}学生信息错误：{}", stu.getId(), e);
         }
         return false;
     }
@@ -127,7 +127,7 @@ public class StudentDaoImpl implements StudentDao {
             ps.setInt(1, stu.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
-            logger.error("删除学号为{}的学生失败：" + e, stu.getStuId());
+            logger.error("删除学号为{}的学生失败：{}", stu.getStuId(), e);
             return false;
         }
         return true;
@@ -148,7 +148,7 @@ public class StudentDaoImpl implements StudentDao {
             }
             return list;
         } catch (SQLException e) {
-            logger.error("展示所有学生信息出错：" + e);
+            logger.error("展示所有学生信息出错：{}", e);
         }
         return list;
     }
@@ -166,7 +166,7 @@ public class StudentDaoImpl implements StudentDao {
         List<Student> list = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);) {
-            ps.setString(1, id);
+            ps.setString(1, "%" + id + "%");
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Student stu = translateStudentFromDatabase(rs);
@@ -176,7 +176,7 @@ public class StudentDaoImpl implements StudentDao {
             }
 
         } catch (SQLException e) {
-            logger.error("查找学号为{}的学生失败：" + e, id);
+            logger.error("查找学号为{}的学生失败：{}", id, e);
         }
         return list;
     }
@@ -189,12 +189,12 @@ public class StudentDaoImpl implements StudentDao {
     public List<Student> findByName(String name) {
         String sql = """
                 SELECT * FROM student
-                WHERE stu_name LIKE ?;
+                WHERE stu_name LIKE ? ;
                 """;
         List<Student> list = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);) {
-            ps.setString(1, name);
+            ps.setString(1, "%" + name + "%");
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Student stu = translateStudentFromDatabase(rs);
@@ -204,7 +204,7 @@ public class StudentDaoImpl implements StudentDao {
             }
 
         } catch (SQLException e) {
-            logger.error("查找姓名为{}的学生失败：" + e, name);
+            logger.error("查找姓名为{}的学生失败：{}", name, e);
         }
         return list;
     }
