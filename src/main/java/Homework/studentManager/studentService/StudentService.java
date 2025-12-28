@@ -23,7 +23,4 @@ public interface StudentService {
     // 查找所有学生信息
     List<Student> findAll();
 
-    //文件的导入导出
-    int importFile(File file);
-    boolean exportFile(File file);
 }   

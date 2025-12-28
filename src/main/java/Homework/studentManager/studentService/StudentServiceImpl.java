@@ -1,11 +1,5 @@
 package homework.studentManager.studentService;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -32,12 +26,12 @@ public class StudentServiceImpl implements StudentService {
     public boolean addStudent(Student stu) {
         ValidationResult result = ValidationUtil.stuInfoIsValidate(stu);
         if (result.isValid()) {
-            dao.addStudent(stu);
+            boolean success = dao.addStudent(stu);
+            return success;
         } else {
             logger.error(result.getMessage());
             return false;
         }
-        return true;
     }
 
     /**
@@ -46,12 +40,12 @@ public class StudentServiceImpl implements StudentService {
     public boolean updateStuInfo(Student stu) {
         ValidationResult result = ValidationUtil.stuInfoIsValidate(stu);
         if (result.isValid()) {
-            dao.updateStuInfo(stu);
+            boolean success = dao.updateStuInfo(stu);
+            return success;
         } else {
             logger.error(result.getMessage());
             return false;
         }
-        return true;
     }
 
     /**
@@ -59,8 +53,7 @@ public class StudentServiceImpl implements StudentService {
      */
     @Override
     public boolean deleteStudent(Student stu) {
-        dao.deleteStudent(stu);
-        return true;
+        return dao.deleteStudent(stu);
     }
 
     /**
@@ -91,50 +84,5 @@ public class StudentServiceImpl implements StudentService {
         return dao.findAll();
     }
 
-    /**
-     * 文件的导入
-     */
-    public int importFile(File file) {
-        int count = 0;
-        try (FileReader fr = new FileReader(file);
-                BufferedReader br = new BufferedReader(fr)) {
-            if (br.readLine() == "学号,姓名,性别,年龄") {
-                String line;
-                String[] list;
-                while ((line = br.readLine()) != null) {
-                    list = line.split(",");
-                    Student stu = new Student(list[0], list[1], list[2], Integer.parseInt(list[3]));
-                    dao.addStudent(stu);
-                    count++;
-                }
-            }
-            return count;
-        } catch (IOException e) {
-            logger.error("导入文件出错：" + e);
-        }
-        return -1;
-    }
 
-    /**
-     * 文件的导出
-     */
-    public boolean exportFile(File file) {
-        if (file.getName().endsWith(".csv")) {
-            List<Student> list = dao.findAll();
-            try (FileWriter fw = new FileWriter(file);
-                    BufferedWriter bw = new BufferedWriter(fw)) {
-                bw.write("学号,姓名,性别,年龄\n");
-                for (Student stu : list) {
-                    bw.write(stu.toString()+"\n");
-                }
-            }catch(IOException e){
-                logger.error("导出到文件出错："+e);
-                return false;
-            }
-        }else{
-            logger.error("文件格式不正确");
-            return false;  
-        }
-        return true;
-    }
 }
