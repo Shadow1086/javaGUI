@@ -24,8 +24,6 @@ public class Student {
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 
-    
-
     public Student() {
     };
 
@@ -36,12 +34,14 @@ public class Student {
         this.age = age;
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
-    public void setId(int id){
+
+    public void setId(int id) {
         this.id = id;
     }
+
     public String getName() {
         return name;
     }
@@ -81,10 +81,18 @@ public class Student {
     public LocalDateTime getUpdateTime() {
         return updateTime;
     }
-    public void setCreateTime(String createTimeStr){
-        this.createTime = LocalDateTime.parse(createTimeStr,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+    public void setCreateTime(String createTimeStr) {
+        this.createTime = LocalDateTime.parse(createTimeStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
-    public void setUpdateTime(String updateTimeStr){
-        this.updateTime = LocalDateTime.parse(updateTimeStr,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+    public void setUpdateTime(String updateTimeStr) {
+        this.updateTime = LocalDateTime.parse(updateTimeStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(id) + "," + name + "," + stuId + "," + sex + "," + age + "," + createTime + ","
+                + updateTime;
     }
 }
